@@ -1,0 +1,11 @@
+{
+  "recommendations": [
+    "EditorConfig.EditorConfig",
+    "vscjava.vscode-java-pack",
+    "redhat.fabric8-analytics",
+    "SonarSource.sonarlint-vscode",
+    "vmware.vscode-spring-boot",
+    "vscjava.vscode-spring-boot-dashboard",
+    "vscjava.vscode-lombok",
+  ]
+}
