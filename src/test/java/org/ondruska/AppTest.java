@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.io.File;
 import java.io.IOException;
 
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,16 +14,24 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.firefox.GeckoDriverService;
+import org.openqa.selenium.remote.RemoteWebDriver;
+
+import lombok.val;
 
 class AppTest {
 
+    private static final String REMOTE_DRIVER_URL = "http://localhost:4444";
+
+    @NonNull
+    private static final FirefoxOptions OPTIONS = new FirefoxOptions().addArguments("-headless");
+
     WebDriver driver;
 
-    private FirefoxDriver getFirefoxDriver() {
-        FirefoxOptions options = new FirefoxOptions();
-        options.addArguments("-headless");
+    @SuppressWarnings("unused")
+    private WebDriver getLocalFirefoxDriver() {
+
         GeckoDriverService service = null;
-        File snapGeckoDriver = new File("/snap/bin/geckodriver") {
+        val snapGeckoDriver = new File("/snap/bin/geckodriver") {
             // https://github.com/SeleniumHQ/selenium/issues/7788
             @Override
             public String getCanonicalPath() throws IOException {
@@ -32,12 +41,19 @@ class AppTest {
         if (snapGeckoDriver.exists()) {
             service = new GeckoDriverService.Builder().usingDriverExecutable(snapGeckoDriver).build();
         }
-        return service != null ? new FirefoxDriver(service, options) : new FirefoxDriver(options);
+        return service != null ? new FirefoxDriver(service, OPTIONS) : new FirefoxDriver(OPTIONS);
+    }
+
+    private WebDriver getDriver() {
+        return RemoteWebDriver.builder()
+                .address(REMOTE_DRIVER_URL)
+                .addAlternative(OPTIONS)
+                .build();
     }
 
     @BeforeEach
     void setup() {
-        driver = getFirefoxDriver();
+        driver = getDriver();
     }
 
     @AfterEach
