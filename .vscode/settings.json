@@ -1,11 +1,8 @@
 {
   "files.exclude": {
-    "**/.git": true,
-    "target": true,
+    ".git/": true,
+    "target/": true,
   },
   "java.compile.nullAnalysis.mode": "automatic",
   "java.configuration.updateBuildConfiguration": "automatic",
-  "files.autoSave": "afterDelay",
-  "files.autoSaveWhenNoErrors": true,
-  "files.autoSaveWorkspaceFilesOnly": true
 }
