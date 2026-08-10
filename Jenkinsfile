@@ -14,6 +14,7 @@ pipeline {
     }
     stage("Test") {
       steps {
+        sh "podman run -d -p 4444:4444 --name selenium imac:8082/docker-proxy/selenium/standalone-firefox:latest"
         withMaven {
           sh "./mvnw test"
         }
@@ -21,6 +22,8 @@ pipeline {
       post {
         always {
           junit "target/surefire-reports/*.xml"
+          sh "podman container stop selenium"
+          sh "podman container ls --all --filter name=selenium --quiet | xargs podman container rm"
         }
       }
     }
